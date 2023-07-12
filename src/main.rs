@@ -18,6 +18,9 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+// This file was copied from the following chat-example:
+//   https://github.com/libp2p/rust-libp2p/blob/master/examples/chat-example/src/main.rs
+
 #![doc = include_str!("../README.md")]
 
 use async_std::io;
@@ -60,8 +63,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
       .multiplex(yamux::Config::default())
       .timeout(std::time::Duration::from_secs(20))
       .boxed();
+
   let quic_transport =
     quic::async_std::Transport::new(quic::Config::new(&id_keys));
+
   let transport = OrTransport::new(quic_transport, tcp_transport)
     .map(|either_output, _| match either_output {
       Either::Left((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
